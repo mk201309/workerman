@@ -8,16 +8,33 @@ services:
     container_name: workerman
     restart: always
     # ports:
-    #   - 8080:8080
+    #   - 8282:8282
     working_dir: /home/project
     volumes:
       - .:/home/project
     labels:
+      # - "traefik.http.routers.workerman.rule=Host(`workerman.local.com`)"
+      # - "traefik.http.services.workerman.loadbalancer.server.port=80"
       - "traefik.http.routers.workerman.rule=Host(`workerman.local.com`)"
-      - "traefik.http.services.workerman.loadbalancer.server.port=80"
+      - "traefik.http.services.workerman.loadbalancer.server.port=8282"
+    extra_hosts:
+      - "workerman.local.com:127.0.0.1"
     networks:
       - web_service
-    command: "top"
+    command: "php start.php start -d; top"
+  # socket-test:
+  #   image: ksdn117/web-socket-test
+  #   container_name: socket-test
+  #   restart: always
+  #   # labels:
+  #   #   - "traefik.http.routers.workerman.rule=Host(`workerman.local.com`)"
+  #   #   - "traefik.http.services.workerman.loadbalancer.server.port=8010"
+  #   extra_hosts:
+  #     - "workerman.local.com:127.0.0.1"
+  #   networks:
+  #     - web_service
+  #   command: "top"
+
 
 networks:
   web_service:
